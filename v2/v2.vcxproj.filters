@@ -21,12 +21,33 @@
     <ClInclude Include="pch.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="BLCalibration.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="cameraCalibration.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="dealP3P.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="getImgRT.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="H2R_T.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="piexl2cam.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="R_T2H.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
