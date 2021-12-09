@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "BLCalibration.h"
+#include "utils.h"
+
 
 int bl::dealP3P(std::vector<cv::Point3f> points3D, std::vector<cv::Point2f> points2D,
 	const cv::Mat cameraMatrix, const cv::Mat distCoeffs, cv::Mat& R, cv::Mat& T, int method)
@@ -37,17 +39,27 @@ int bl::dealP3P(std::vector<cv::Point3f> points3D, std::vector<cv::Point2f> poin
     }
 
 
-    // 迭代次数
-    int iterationsCount = 300;      
-    // 重投影误差范围
-    float reprojectionError = 5.991; 
-    // 迭代精度
-    double confidence = 0.95;        
+    if (method != SOLVEPNP_BL) 
+    {
+        // 迭代次数
+        int iterationsCount = 300;
+        // 重投影误差范围
+        float reprojectionError = 5.991;
+        // 迭代精度
+        double confidence = 0.95;
 
-    cv::Mat inliers;
-  
-    // 调用opencv函数
-    cv::solvePnPRansac(points3D,points2D,cameraMatrix,distCoeffs,R,T,false,iterationsCount,reprojectionError,confidence,inliers,method);
+        cv::Mat inliers;
+
+        // 调用opencv函数
+        cv::solvePnPRansac(points3D, points2D, cameraMatrix, distCoeffs, R, T, false, iterationsCount, reprojectionError, confidence, inliers, method);
+    
+
+    }
+    else
+    {
+       blP3P(points3D,points2D,cameraMatrix,distCoeffs,R,T);
+    }
+   
 
   //  cv::solvePnP(points3D,points2D,cameraMatrix,distCoeffs,R,T,false,method);
 	Rodrigues(R, R);
@@ -55,3 +67,9 @@ int bl::dealP3P(std::vector<cv::Point3f> points3D, std::vector<cv::Point2f> poin
 	T.convertTo(T, CV_32FC1);
 
 }
+
+
+
+
+
+

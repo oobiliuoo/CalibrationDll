@@ -24,6 +24,9 @@
     <ClInclude Include="BLCalibration.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -48,6 +51,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="R_T2H.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="get2PointD.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="blP3P.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="solveForLengths.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
