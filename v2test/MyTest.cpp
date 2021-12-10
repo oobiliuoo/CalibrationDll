@@ -5,7 +5,7 @@
 void MyTest::test1()
 {
 	
-	cv::Mat color = cv::imread("E:\\biliu\\workspace\\CppCode\\test\\AstraTest\\AstraCamera\\img\\image_7.jpg");
+	cv::Mat color = cv::imread("E:\\biliu\\workspace\\CppCode\\test\\AstraTest\\AstraCamera\\img\\image_12.jpg");
 	
 	std::vector<cv::Point2f> image_points_buf;  /* 缓存每幅图像上检测到的角点 */
 	cv::Size board_size = cv::Size(11, 8);    /* 标定板上每行、列的角点数 */

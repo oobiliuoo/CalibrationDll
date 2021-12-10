@@ -79,5 +79,10 @@ namespace bl
 	_declspec(dllexport) double get2PointD(cv::Point3f o, cv::Point3f p);
 
 
+	_declspec(dllexport) double getCosines(double a, double b, double c);
+
+	
+
+
 }
 

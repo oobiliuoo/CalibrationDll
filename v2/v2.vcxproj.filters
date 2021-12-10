@@ -62,5 +62,11 @@
     <ClCompile Include="solveForLengths.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="getCosines.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ICP.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

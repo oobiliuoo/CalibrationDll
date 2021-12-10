@@ -48,14 +48,12 @@ int solveForLengths(double lengths[4][3], double distances[3], double cosines[3]
     cv::Mat roots;
     double n =solvePoly(coef, roots);
 
-
-    std::cout << "rows:" << roots.rows<<std::endl;
     double real_roots[4];
     for (int i = 0; i < 4; i++)
     {
         real_roots[i] = roots.at<double>(i,0);
         //-----------------
-        std::cout <<"real_roots" << real_roots[i] << " \n";
+        std::cout <<"real_roots: " << real_roots[i] << " \n";
     }
 
 
