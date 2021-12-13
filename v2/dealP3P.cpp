@@ -3,7 +3,7 @@
 #include "utils.h"
 
 
-int bl::dealP3P(std::vector<cv::Point3f> points3D, std::vector<cv::Point2f> points2D,
+int bl::dealP3P(std::vector<cv::Point3d> points3D, std::vector<cv::Point2f> points2D,
 	const cv::Mat cameraMatrix, const cv::Mat distCoeffs, cv::Mat& R, cv::Mat& T, int method)
 {
 
@@ -52,7 +52,8 @@ int bl::dealP3P(std::vector<cv::Point3f> points3D, std::vector<cv::Point2f> poin
 
         // µ÷ÓÃopencvº¯Êý
         cv::solvePnPRansac(points3D, points2D, cameraMatrix, distCoeffs, R, T, false, iterationsCount, reprojectionError, confidence, inliers, method);
-    
+  
+	    Rodrigues(R, R);
 
     }
     else
@@ -62,9 +63,9 @@ int bl::dealP3P(std::vector<cv::Point3f> points3D, std::vector<cv::Point2f> poin
    
 
   //  cv::solvePnP(points3D,points2D,cameraMatrix,distCoeffs,R,T,false,method);
-	Rodrigues(R, R);
-	R.convertTo(R, CV_32FC1);
-	T.convertTo(T, CV_32FC1);
+//	Rodrigues(R, R);
+//	R.convertTo(R, CV_32FC1);
+//	T.convertTo(T, CV_32FC1);
 
 }
 

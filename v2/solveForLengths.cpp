@@ -53,7 +53,7 @@ int solveForLengths(double lengths[4][3], double distances[3], double cosines[3]
     {
         real_roots[i] = roots.at<double>(i,0);
         //-----------------
-        std::cout <<"real_roots: " << real_roots[i] << " \n";
+        //std::cout <<"real_roots: " << real_roots[i] << " \n";
     }
 
 
@@ -104,7 +104,7 @@ int solveForLengths(double lengths[4][3], double distances[3], double cosines[3]
         lengths[nb_solutions][2] = Z;
         
         //-----------------
-        std::cout << nb_solutions << " -> x:" << X << " " << Y << " " << Z<<std::endl;
+      //  std::cout << nb_solutions << " -> x:" << X << " " << Y << " " << Z<<std::endl;
 
         nb_solutions++;
     }

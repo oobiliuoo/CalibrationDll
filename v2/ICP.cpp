@@ -2,47 +2,28 @@
 #include "BLCalibration.h"
 
 
-void calNearestPointPairs(cv::Mat h, CvMat* ori, CvMat* tar, bl::vP3F targetPoints, double& err);
+void calErr(cv::Mat h, bl::vP3D& ori, bl::vP3D tar, double& err);
 
 
-void bl::ICP(vP3F originPoints, vP3F targetPoints, cv::Mat& R, cv::Mat& T)
+void bl::ICP(vP3D originPoints, vP3D targetPoints, cv::Mat& R, cv::Mat& T)
 {
 
 	// 1.参数设置
 	// 错误率
-	double err = 1.0;
+	double err = 100.0;
 	// 最高错误率
-	double maxErr = 0.2;
+	double maxErr = 1.0;
 	// 迭代次数 
 	int maxIter = 100;
 	// 设定初始R、T、h
-	cv::Mat r_o2t = (cv::Mat_<float>(3, 3) << 1, 0, 0, 0, 1, 0, 0, 0, 1);
-	cv::Mat t_o2t = (cv::Mat_<float>(3, 1) << 0, 0, 0);
+	cv::Mat r_o2t = (cv::Mat_<double>(3, 3) << 1, 0, 0, 0, 1, 0, 0, 0, 1);
+	cv::Mat t_o2t = (cv::Mat_<double>(3, 1) << 0, 0, 0);
 	cv::Mat h_o2t;
 	bl::R_T2H(r_o2t, t_o2t, h_o2t);
-	cv::Mat H_final = h_o2t;
+	cv::Mat H_final = h_o2t.clone();
 
-	int pointSize = originPoints.size();
-	//构建源点集cvmat
-	CvMat* pointsOri = cvCreateMat(pointSize, 3, CV_32FC1);
-	CvMat* pointsTar = cvCreateMat(pointSize, 3, CV_32FC1);
+	size_t pointSize = originPoints.size();
 
-	// 赋值
-	for (int i = 0; i < pointSize; i++)
-	{
-		pointsOri->data.fl[i * 3 + 0] = originPoints[i].x; 
-		pointsOri->data.fl[i * 3 + 1] = originPoints[i].y; 
-		pointsOri->data.fl[i * 3 + 2] = originPoints[i].z; 
-
-		pointsTar->data.fl[i * 3 + 0] = targetPoints[i].x; 
-		pointsTar->data.fl[i * 3 + 1] = targetPoints[i].y; 
-		pointsTar->data.fl[i * 3 + 2] = targetPoints[i].z; 
-
-	}
-
-	int nrows = pointsOri->rows;
-	int ncols = pointsOri->cols;
-	int type = pointsOri->type;
 
 	int iters = 0;
 	while (err > maxErr && iters < maxIter)
@@ -50,153 +31,121 @@ void bl::ICP(vP3F originPoints, vP3F targetPoints, cv::Mat& R, cv::Mat& T)
 
 		iters++;
 		double lastErr = err;
-		// 计算临近点对
-		calNearestPointPairs(h_o2t, pointsOri,pointsTar, targetPoints, err);
 
-		CvMat* centroidOri = cvCreateMat(1, ncols, type);
-		CvMat* centroidTar = cvCreateMat(1, ncols, type);
-		cvSet(centroidOri, cvScalar(0));
-		cvSet(centroidTar, cvScalar(0));
-		for (int c = 0; c < ncols; c++) {
-			for (int r = 0; r < nrows; r++)
-			{
-				centroidOri->data.fl[c] += pointsOri->data.fl[ncols * r + c];
-				centroidTar->data.fl[c] += pointsTar->data.fl[ncols * r + c];
-			}
-			centroidOri->data.fl[c] /= nrows;
-			centroidTar->data.fl[c] /= nrows;
-		}
+		// 计算误差
+		calErr(h_o2t, originPoints, targetPoints, err);
 
-		// 去质心
-		for (int r = 0; r < nrows; r++)
+		if (abs(err - lastErr) < 0.1 )
+			break;
+
+		// 质心
+		cv::Point3d oriCenterP(0.0,0.0,0.0);
+		cv::Point3d tarCenterP(0.0,0.0,0.0);
+
+		for (size_t i = 0; i < pointSize; i++)
 		{
-			for (int c = 0; c < ncols; c++)
-			{
-				pointsOri->data.fl[ncols * r + c] = pointsOri->data.fl[ncols * r + c] - centroidOri->data.fl[c];
-				pointsTar->data.fl[ncols * r + c] = pointsTar->data.fl[ncols * r + c] - centroidTar->data.fl[c];
-			}
+			oriCenterP.x += originPoints[i].x;
+			oriCenterP.y += originPoints[i].y;
+			oriCenterP.z += originPoints[i].z;
+
+			tarCenterP.x += targetPoints[i].x;
+			tarCenterP.y += targetPoints[i].y;
+			tarCenterP.z += targetPoints[i].z;
 		}
-	
-		// 奇异值分解
-		CvMat* H = cvCreateMat(ncols, ncols, type);
-		CvMat* W = cvCreateMat(ncols, ncols, type);
-		CvMat* V = cvCreateMat(ncols, ncols, type);
-		CvMat* U = cvCreateMat(ncols, ncols, type);
-
-
-
-		/*
 		
-		double cvGEMM(//矩阵的广义乘法运算
-			const CvArr* src1,//乘数矩阵
-			const CvArr* src2,//乘数矩阵
-			double alpha,//1号矩阵系数
-			const CvArr* src3,//加权矩阵
-			double beta,//2号矩阵系数
-			CvArr* dst,//结果矩阵
-			int tABC = 0//变换标记
-		);
-		函数对应的乘法运算公式为：dst = (alpha*src1)xsrc2+(beta*src3)
-		CV_GEMM_A_T 转置 src1
-		CV_GEMM_B_T 转置 src2
-		CV_GEMM_C_T 转置 src3
-		*/
+		oriCenterP.x /= pointSize;
+		oriCenterP.y /= pointSize;
+		oriCenterP.z /= pointSize;
 
-		cvGEMM(pointsOri, pointsTar, 1, NULL, 0, H, CV_GEMM_B_T);
+		tarCenterP.x /= pointSize;
+		tarCenterP.y /= pointSize;
+		tarCenterP.z /= pointSize;
 
-		/*
-		void cvSVD(//计算 A = U*W*(V的转置)
-			CvArr* A,
-			CvArr* W,
-			CvArr* U = NULL,
-			CvArr* V = NULL,
-			int flags = 0//标记位
-		参数	结果
-			CV_SVD_MODIFY_A	允许改变矩阵A
-			CV_SVD_U_T	返回U转置而不是U
-			CV_SVD_V_T	返回V转置而不是V
-		);
-		*/
-		cvSVD(H, W, U, V, CV_SVD_U_T);
+	//	std::cout << "centP:" << oriCenterP << "\t" << tarCenterP << std::endl;
 	
-		// R =V*U.t
-		cv::Mat U1(U->rows,U->cols,U->type,U->data.fl);
-		cv::Mat V1(V->rows,V->cols,V->type,V->data.fl);
-		double m = cv::norm(U1 * V1);
-		cv::Mat c = (cv::Mat_<float>(3, 3) << 1, 0, 0, 0, 1, 0, 0, 0, m);
-		r_o2t = V1 *c* U1;
+		cv::Mat oriMat;
+		oriMat = cv::Mat::zeros(3, pointSize, CV_64F);
+		cv::Mat tarMat;
+		tarMat = cv::Mat::zeros(3, pointSize, CV_64F);
 
-		// T = cpt - R * cps
-		cv::Mat cpt(centroidTar->rows,centroidTar->cols,centroidTar->type,centroidTar->data.fl);
-		cv::Mat cps(centroidOri->rows,centroidOri->cols,centroidOri->type,centroidOri->data.fl);
-	//	std::cout << "cpt: \n" << cpt<<std::endl;
-	//	std::cout << "cps: \n" << cps<<std::endl;
+		for (size_t i = 0; i < pointSize; i++)
+		{
+			oriMat.at<double>(0, i) = originPoints[i].x - oriCenterP.x;
+			oriMat.at<double>(1, i) = originPoints[i].y - oriCenterP.y;
+			oriMat.at<double>(2, i) = originPoints[i].z - oriCenterP.z;
 
-		t_o2t = cpt.t() - r_o2t * cps.t();
+			tarMat.at<double>(0, i) = targetPoints[i].x - tarCenterP.x;
+			tarMat.at<double>(1, i) = targetPoints[i].y - tarCenterP.y;
+			tarMat.at<double>(2, i) = targetPoints[i].z - tarCenterP.z;
+		
+		}
 
+		cv::Mat matH = oriMat * tarMat.t();
 
+		cv::Mat matU, matW, matV;
+		cv::SVDecomp(matH, matW, matU, matV);
+
+		cv::Mat matTemp = matU * matV;
+		double det = cv::determinant(matTemp);
+
+		double datM[] = { 1, 0, 0, 0, 1, 0, 0, 0, det };
+		cv::Mat matS(3, 3, CV_64FC1, datM);
+	//	std::cout << "mats:" << matS << std::endl;
+
+		r_o2t = matV.t() * matS * matU.t();
+		
+		double tx, ty, tz;
+		tx = tarCenterP.x - (oriCenterP.x * r_o2t.at<double>(0, 0) + oriCenterP.y * r_o2t.at<double>(0, 1) + oriCenterP.z * r_o2t.at<double>(0, 2));
+		ty = tarCenterP.y - (oriCenterP.x * r_o2t.at<double>(1, 0) + oriCenterP.y * r_o2t.at<double>(1, 1) + oriCenterP.z * r_o2t.at<double>(1, 2));
+		tz = tarCenterP.z - (oriCenterP.x * r_o2t.at<double>(2, 0) + oriCenterP.y * r_o2t.at<double>(2, 1) + oriCenterP.z * r_o2t.at<double>(2, 2));
+		double datT[] = { tx,ty,tz };
+		t_o2t = cv::Mat(3, 1, CV_64F, datT);
+	
+	//	std::cout << "tx:" << tx << " ty:" << ty << " tz:" << tz << std::endl;
+
+	//	std::cout << "r:" << r_o2t << std::endl;
+	//	std::cout << "t:" << t_o2t << std::endl;
 		bl::R_T2H(r_o2t, t_o2t, h_o2t);
+//		std::cout << "h_o2t      :" << h_o2t << std::endl;
+		h_o2t = h_o2t.clone();
+	
 
-		H_final = h_o2t * H_final;
-		//std::cout << "H:" << h_o2t << std::endl;
+		cv::Mat htemp =  h_o2t * H_final;
+//		std::cout << "htemp:\n" << htemp << std::endl;
 
-		std::cout << " count: " << iters << " err: " << err<<std::endl;
-		// 释放资源
+		H_final = htemp.clone();
 
-		cvReleaseMat(&centroidOri);
-		cvReleaseMat(&centroidTar);
-		cvReleaseMat(&H);
-		cvReleaseMat(&U);
-		cvReleaseMat(&V);
+	//	std::cout << " count: " << iters << " err: " << err<<std::endl;
 
 
 	}
-	cvReleaseMat(&pointsOri);
-	cvReleaseMat(&pointsTar);
-	std::cout << "H:" << H_final << std::endl;
-	R = r_o2t.clone();
-	T = t_o2t.clone();
+//	std::cout << "H:" << H_final << std::endl;
+	H2R_T(H_final, R, T);
 
 }
 
-void calNearestPointPairs(cv::Mat h, CvMat* ori, CvMat* tar,bl::vP3F targetPoint, double& err)
+void calErr(cv::Mat h, bl::vP3D& ori, bl::vP3D tar, double& err)
 {
-	cv::Mat oriMat(ori->rows, ori->cols, ori->type, ori->data.fl);
-	int pointNum = oriMat.rows;
-	bl::vP3F pointsOri;
-	for (int i = 0; i < pointNum; i++)
+
+//	std::cout << "calErr: h:\n" << h << std::endl;
+
+	int pSize = ori.size();
+	double lengs = 0.0f;
+	for (int i = 0; i < pSize; i++)
 	{
-		float* ptr = oriMat.ptr<float>(i);
-		cv::Mat pMat = (cv::Mat_<float>(4,1)<<*(ptr), *(ptr+1), *(ptr+2),1);
-		pMat = h * pMat;
-		float* ptr2 = pMat.ptr<float>(0);
-		cv::Point3f p(*(ptr2),*(ptr2+1),*(ptr2+2));
-		pointsOri.push_back(p);
+//		std::cout <<"ori p b:" << ori[i] << std::endl;
+//		std::cout <<"tar " << tar[i] << std::endl;
+		cv::Mat tmp = (cv::Mat_<double>(4, 1) << ori[i].x, ori[i].y, ori[i].z, 1.0);
+		cv::Mat tmp2 = h * tmp;
+		ori[i].x = tmp2.at<double>(0, 0);
+		ori[i].y = tmp2.at<double>(1, 0);
+		ori[i].z = tmp2.at<double>(2, 0);
+		
+//		std::cout <<"ori p a:" << ori[i] << std::endl;
+
+		lengs += bl::get2PointD(ori[i], tar[i]);
 	}
-
-
-	// 赋值
-	for (int i = 0; i < pointNum; i++)
-	{
-		ori->data.fl[i * 3 + 0] = pointsOri[i].x;
-		ori->data.fl[i * 3 + 1] = pointsOri[i].y;
-		ori->data.fl[i * 3 + 2] = pointsOri[i].z;
-
-		tar->data.fl[i * 3 + 0] = targetPoint[i].x;
-		tar->data.fl[i * 3 + 1] = targetPoint[i].y;
-		tar->data.fl[i * 3 + 2] = targetPoint[i].z;
-	
-	}
-
-	// 求误差
-	for (int i = 0; i < pointNum; i++)
-	{
-		err +=	bl::get2PointD(pointsOri[i], targetPoint[i]);
-	}
-	err /= pointNum;
-	
-//	std::cout << "err:" << err<<std::endl;
-
-
+	lengs /= pSize;
+	err = lengs;
 
 }

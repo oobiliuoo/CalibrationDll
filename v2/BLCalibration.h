@@ -4,6 +4,7 @@ namespace bl
 
 
 	using vP3F = std::vector<cv::Point3f>;
+	using vP3D = std::vector<cv::Point3d>;
 	using vP2F = std::vector<cv::Point2f>;
 
 
@@ -86,7 +87,7 @@ namespace bl
 			T：（3*1）平移向量
 		注： method为SOLVEPNP_ITERATIVE或SOLVEPNP_P3P时只需4个点   
 	*/
-	_declspec(dllexport) int dealP3P(std::vector<cv::Point3f> Points3D,std::vector<cv::Point2f> Points2D,
+	_declspec(dllexport) int dealP3P(std::vector<cv::Point3d> Points3D,std::vector<cv::Point2f> Points2D,
 		const cv::Mat cameraMatrix, const cv::Mat distCoeffs,cv::Mat& R, cv::Mat& T,int method);
 	
 
@@ -106,7 +107,7 @@ namespace bl
 	_declspec(dllexport) double getCosines(double a, double b, double c);
 
 	
-	_declspec(dllexport) void ICP(vP3F originPoints,vP3F targetPoints,cv::Mat& R,cv::Mat& T);
+	_declspec(dllexport) void ICP(vP3D originPoints,vP3D targetPoints,cv::Mat& R,cv::Mat& T);
 
 
 }

@@ -2,16 +2,16 @@
 #include "BLCalibration.h"
 #include "utils.h"
 
-void blP3P(bl::vP3F points3D, bl::vP2F points2D, const cv::Mat cameraMatrix, const cv::Mat distCoeffs, cv::Mat& R, cv::Mat& T)
+void blP3P(bl::vP3D points3D, bl::vP2F points2D, const cv::Mat cameraMatrix, const cv::Mat distCoeffs, cv::Mat& R, cv::Mat& T)
 {
 
 
-    float fx = cameraMatrix.at<float>(0, 0);
-    float fy = cameraMatrix.at<float>(1, 1);
-    float cx = cameraMatrix.at<float>(0, 2);
-    float cy = cameraMatrix.at<float>(1, 2);
+    float fx = cameraMatrix.at<double>(0, 0);
+    float fy = cameraMatrix.at<double>(1, 1);
+    float cx = cameraMatrix.at<double>(0, 2);
+    float cy = cameraMatrix.at<double>(1, 2);
 
-    bl::vP3F imgPoints;
+    bl::vP3D imgPoints;
 
     for (int i = 0; i < 3; i++)
     {
@@ -36,7 +36,7 @@ void blP3P(bl::vP3F points3D, bl::vP2F points2D, const cv::Mat cameraMatrix, con
     distances[0] = bl::get2PointD(points3D[1], points3D[2]); // BC
     distances[1] = bl::get2PointD(points3D[0], points3D[2]); // AC
     distances[2] = bl::get2PointD(points3D[0], points3D[1]); // AB
-    std::cout << "distance: " << distances[0] << " " << distances[1] << " " << distances[2] << std::endl;
+  //  std::cout << "distance: " << distances[0] << " " << distances[1] << " " << distances[2] << std::endl;
 
     
 
@@ -46,7 +46,7 @@ void blP3P(bl::vP3F points3D, bl::vP2F points2D, const cv::Mat cameraMatrix, con
     double AB_norm = bl::get2PointD(imgPoints[0], imgPoints[1]); // AB
    
     // 原点到归一化平面三点距离
-    cv::Point3f o(0, 0, 0);
+    cv::Point3d o(0.0, 0.0, 0.0);
     double PA_norm = bl::get2PointD(imgPoints[0], o);
     double PB_norm = bl::get2PointD(imgPoints[1], o);
     double PC_norm = bl::get2PointD(imgPoints[2], o);
@@ -61,15 +61,17 @@ void blP3P(bl::vP3F points3D, bl::vP2F points2D, const cv::Mat cameraMatrix, con
     cosines[1] = bl::getCosines(PA_norm,PC_norm,AC_norm);
     cosines[2] = bl::getCosines(PA_norm,PB_norm,AB_norm);
 
-    std::cout << "cosines: " << cosines[0] << " " << cosines[1] << " " << cosines[2] << std::endl;
+   // std::cout << "cosines: " << cosines[0] << " " << cosines[1] << " " << cosines[2] << std::endl;
 
     // 吴消元法求解PA,PB,PC的值，有四组解
     double lengths[4][3];
     int n = solveForLengths(lengths, distances, cosines);
 
-    cv::Point3f camPoints[3];
+    cv::Point3d camPoints[3];
+    cv::Mat h[4],ht[4];
 
-    for (int i = 0; i < 1; i++)
+    // 求解每组对应的R、T
+    for (int i = 0; i < n; i++)
     {
         camPoints[0].x = lengths[i][0] * imgPoints[0].x;
         camPoints[0].y = lengths[i][0] * imgPoints[0].y;
@@ -83,20 +85,58 @@ void blP3P(bl::vP3F points3D, bl::vP2F points2D, const cv::Mat cameraMatrix, con
         camPoints[2].y = lengths[i][2] * imgPoints[2].y;
         camPoints[2].z = lengths[i][2] * imgPoints[2].z;
 
-        std::cout << "cam A: " << camPoints[0]<<std::endl;
-        std::cout << "cam B: " << camPoints[1]<<std::endl;
-        std::cout << "cam C: " << camPoints[2]<<std::endl<<std::endl;
+        //std::cout << "cam A: " << camPoints[0]<<std::endl;
+       // std::cout << "cam B: " << camPoints[1]<<std::endl;
+       // std::cout << "cam C: " << camPoints[2]<<std::endl;
 
 
         // ICP 求RT
-        bl::vP3F camPs;
+        bl::vP3D camPs;
         camPs.push_back(camPoints[0]);
         camPs.push_back(camPoints[1]);
         camPs.push_back(camPoints[2]);
 
-        bl::ICP(camPs,points3D,R,T);
+        cv::Mat r, t;
+        bl::ICP(camPs,points3D,r,t);
+
+        bl::R_T2H(r, t, h[i]);
+
+       // std::cout << "hi:\n" << h[i] << std::endl;
+
+      //  std::cout << std::endl;
+    }
+
+    int ns = 0;
+    double min_reproj = 0;
+    // 计数误差最小的一组
+    for (int i = 0; i < n; i++)
+    {
+        //  根据r、t计算第四个点的坐标
+        ht[i] = h[i].clone();
+        cv::Mat tmp = (cv::Mat_<double>(4, 1) << points3D[3].x, points3D[3].y, points3D[3].z, 1.0);
+        cv::Mat tmp2 = ht[i].inv() * tmp;
+        cv::Point3d p3(tmp2.at<double>(0, 0), tmp2.at<double>(1, 0), tmp2.at<double>(2, 0));
+       // std::cout << "p3:" << p3 << std::endl;
+
+        cv::Point2d p;
+        p.x = cx + fx * p3.x / p3.z;
+        p.y = cy + fy * p3.y / p3.z;
+
+        // 计算重投影距离
+        double reproj = (p.x - points2D[3].x) * (p.x - points2D[3].x) + (p.x - points2D[3].y) * (p.x - points2D[3].y);
+        
+        // 选择误差最小的解
+        if (i == 0 || min_reproj > reproj)
+        {
+            ns = i;
+            min_reproj = reproj;
+        }
 
     }
+
+   // std::cout << "ns: " << ns << std::endl;
+    
+    bl::H2R_T(h[ns], R, T);
         
 
 }

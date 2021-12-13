@@ -4,6 +4,7 @@ namespace bl
 
 
 	using vP3F = std::vector<cv::Point3f>;
+	using vP3D = std::vector<cv::Point3d>;
 	using vP2F = std::vector<cv::Point2f>;
 
 
@@ -73,15 +74,40 @@ namespace bl
 
 
 
-	_declspec(dllexport) int dealP3P(std::vector<cv::Point3f> Points3D,std::vector<cv::Point2f> Points2D,
+	/*
+		求解P3P问题
+		输入：
+			Points3D:			三维点集
+			points2d:			二维点集
+			cameraMatrix:		相机内参
+			distCoeffs：			畸变系数
+			method:				求解方法
+		输出：
+			R：（3*3）旋转矩阵
+			T：（3*1）平移向量
+		注： method为SOLVEPNP_ITERATIVE或SOLVEPNP_P3P时只需4个点   
+	*/
+	_declspec(dllexport) int dealP3P(std::vector<cv::Point3d> Points3D,std::vector<cv::Point2f> Points2D,
 		const cv::Mat cameraMatrix, const cv::Mat distCoeffs,cv::Mat& R, cv::Mat& T,int method);
 	
+
+	/*
+		求解两点之间的距离
+		o:点1
+		p:点2
+		return: 距离
+	*/
 	_declspec(dllexport) double get2PointD(cv::Point3f o, cv::Point3f p);
 
 
+	/*
+		求解余弦值
+		cos<a,b> = (a*a+b*b-c*c)/(2ab)
+	*/
 	_declspec(dllexport) double getCosines(double a, double b, double c);
 
 	
+	_declspec(dllexport) void ICP(vP3D originPoints,vP3D targetPoints,cv::Mat& R,cv::Mat& T);
 
 
 }
