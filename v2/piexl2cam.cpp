@@ -2,12 +2,12 @@
 #include "BLCalibration.h"
 
 
-void bl::piexl2Cam(cv::Point2d piexl,cv::Point3f& camPoint, double zc, cv::Mat cameraMatrix) {
+void bl::piexl2Cam(cv::Point2d piexl,cv::Point3d& camPoint, double zc, cv::Mat cameraMatrix) {
 
-	float fx = cameraMatrix.at<float>(0, 0);
-	float fy = cameraMatrix.at<float>(1, 1);
-	float cx = cameraMatrix.at<float>(0, 2);
-	float cy = cameraMatrix.at<float>(1, 2);
+	double fx = cameraMatrix.at<double>(0, 0);
+	double fy = cameraMatrix.at<double>(1, 1);
+	double cx = cameraMatrix.at<double>(0, 2);
+	double cy = cameraMatrix.at<double>(1, 2);
 
 	camPoint.x = zc * (piexl.x - cx) / fx;
 	camPoint.y = zc * (piexl.y - cy) / fy;

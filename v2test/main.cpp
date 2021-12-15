@@ -5,7 +5,7 @@ void main()
 {
 
 	MyTest mytest;
-	mytest.test1();
+	mytest.test2();
 
 
 }

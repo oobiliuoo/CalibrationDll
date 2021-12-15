@@ -9,6 +9,7 @@ class MyTest
 {
 public:
 	void test1();
+	void test2();
 
 };
 

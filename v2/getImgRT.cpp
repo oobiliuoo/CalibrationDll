@@ -41,8 +41,8 @@ void bl::getImgRT(const cv::Mat srcImg, cv::Mat& R, cv::Mat& T, const cv::Mat ca
 	cv::solvePnPRansac(object_points, image_points_buf, cameraMatrix, distCoeffs, R, T);
 	/* 将旋转向量转换为相对应的旋转矩阵 */
 	Rodrigues(R, R);
-	R.convertTo(R, CV_32FC1);
-	T.convertTo(T, CV_32FC1);
+//	R.convertTo(R, CV_64F);
+//	T.convertTo(T, CV_32FC1);
 
 }
 

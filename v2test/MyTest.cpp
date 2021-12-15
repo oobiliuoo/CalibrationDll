@@ -1,13 +1,14 @@
 #include "MyTest.h"
-
 #include "BLCalibration.h"
+#include "utils.h"
 
 void MyTest::test1()
 {
-	
+
 	cv::Mat color = cv::imread("E:\\biliu\\workspace\\CppCode\\test\\AstraTest\\AstraCamera\\img\\image_12.jpg");
 
-	
+
+
 	std::vector<cv::Point2f> image_points_buf;  /* 缓存每幅图像上检测到的角点 */
 	cv::Size board_size = cv::Size(11, 8);    /* 标定板上每行、列的角点数 */
 	/*棋盘三维信息*/
@@ -47,12 +48,12 @@ void MyTest::test1()
 	std::vector<cv::Point2f> p2d;
 
 
-	int index[4] = { 0,4,35,37 };
+	int index[4] = { 0,6,40,56 };
 
-//	object_points[index[0]].z = 5;
-//	object_points[index[1]].z = 15;
-//	object_points[index[2]].z = 25;
-//	object_points[index[3]].z = 0;
+	//	object_points[index[0]].z = 5;
+	//	object_points[index[1]].z = 15;
+	//	object_points[index[2]].z = 25;
+	//	object_points[index[3]].z = 0;
 
 	p3d.push_back(object_points[index[0]]);
 	p3d.push_back(object_points[index[1]]);
@@ -68,17 +69,30 @@ void MyTest::test1()
 
 
 
-	cv::Mat c = (cv::Mat_<double>(3,3)<<454.27054,0,326.42542,0,454.27054,245.09856,0,0,1);
-	cv::Mat k = (cv::Mat_<double>(1,5)<<0.04648158,-0.0685723,0.00047238,-0.0001669,0);
+	cv::Mat c = (cv::Mat_<double>(3, 3) << 454.27054, 0, 326.42542, 0, 454.27054, 245.09856, 0, 0, 1);
+	cv::Mat k = (cv::Mat_<double>(1, 5) << 0.04648158, -0.0685723, 0.00047238, -0.0001669, 0);
 
 
 
 	cv::Mat r1, t1, h1;
 	bl::getImgRT(color, r1, t1, c, k);
 	bl::R_T2H(r1, t1, h1);
+	h1 = h1.clone();
 	//	std::cout << "r1\n" << r1 << std::endl;
 	//	std::cout << "t1\n" << t1 << std::endl;
 	std::cout << "h\n" << h1 << std::endl;
+
+	cv::Mat tmp = (cv::Mat_<double>(4, 1) << object_points[index[3]].x, object_points[index[3]].y, object_points[index[3]].z, 1.0);
+	cv::Mat tmp2 = h1 * tmp;
+	cv::Point3d p3(tmp2.at<double>(0, 0), tmp2.at<double>(1, 0), tmp2.at<double>(2, 0));
+	std::cout << "p3:" << p3 << std::endl;
+	cv::Point3d camp;
+	bl::piexl2Cam(image_points_buf[index[3]], camp, 185.345, c);
+	std::cout << "camp:" << camp<<std::endl;
+
+
+
+
 	
 	
 
@@ -94,12 +108,54 @@ void MyTest::test1()
 
 
 
-	cv::circle(color, image_points_buf[index[0]], 30, cv::Scalar(0, 0, 255));
-	cv::circle(color, image_points_buf[index[1]], 30, cv::Scalar(0, 0, 255));
+	cv::circle(color, image_points_buf[index[0]], 30, cv::Scalar(255, 0, 0));
+	cv::circle(color, image_points_buf[index[1]], 30, cv::Scalar(0, 255, 0));
 	cv::circle(color, image_points_buf[index[2]], 30, cv::Scalar(0, 0, 255));
 	cv::circle(color, image_points_buf[index[3]], 30, cv::Scalar(0, 255, 255));
 
 	cv::imshow("img", color);
 	cv::waitKey(0);
+
+}
+
+void MyTest::test2()
+{
+	char buffRecv[1024];
+	cv::Mat_<double> toolPose;
+	std::string fileName = "robotPos.txt";
+//	std::string pos = "100 200 300 1.0000 2.16546 454.1545";
+	int i = 0;
+	while (i < 2) {
+	
+		memset(buffRecv, 0, 1024);
+		strcpy_s(buffRecv, "100 200 300 1.0000 2.16546 454.1545");
+		toolPose = bl::analyzePose(buffRecv, sizeof(buffRecv), toolPose);
+		i++;
+	}
+	bl::writeRobotPos(toolPose, fileName);
+
+	cv::Mat_<double> t = cv::Mat(i, 6, CV_64FC1);
+	t = bl::readRobotPos(fileName,i);
+	
+	std::cout << "analyzePose_ToolPose  = " << t << std::endl;
+	//cv::Mat temp,tempR,tempT;
+	//for (int j = 0; j < t.rows; j++)
+	//{
+	//	temp = attitudeVectorToMatrix(t.row(j), false, "xyz");  //注意seq不是空，机械臂末端坐标系与机器人基坐标系之间的为欧拉角
+	//	bl::H2R_T(temp, tempR, tempT);
+	//	/*cout << j << "::" << temp << endl;*/
+	//	std::cout << j << "::" << tempR << std::endl;
+	//	std::cout << j << "::" << tempT << std::endl;
+	//}
+
+
+	std::string img_file = "img.txt";
+	
+	cv::Mat c = (cv::Mat_<double>(3, 3) << 454.27054, 0, 326.42542, 0, 454.27054, 245.09856, 0, 0, 1);
+	cv::Mat k = (cv::Mat_<double>(1, 5) << 0.04648158, -0.0685723, 0.00047238, -0.0001669, 0);
+
+	cv::Mat h;
+	bl::hand2eyeCalibration(img_file,fileName,h,c,k);
+	std::cout << "over";
 
 }

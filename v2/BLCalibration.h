@@ -6,6 +6,7 @@ namespace bl
 	using vP3F = std::vector<cv::Point3f>;
 	using vP3D = std::vector<cv::Point3d>;
 	using vP2F = std::vector<cv::Point2f>;
+	using vMat = std::vector<cv::Mat>;
 
 
 	enum SolvePNPMethod {
@@ -57,7 +58,7 @@ namespace bl
 		输出：
 		camPoint:		相机坐标
 	*/
-	_declspec(dllexport) void piexl2Cam(cv::Point2d piexl, cv::Point3f& camPoint, double zc, cv::Mat cameraMatrix);
+	_declspec(dllexport) void piexl2Cam(cv::Point2d piexl, cv::Point3d& camPoint, double zc, cv::Mat cameraMatrix);
 
 
 	/*
@@ -108,6 +109,17 @@ namespace bl
 
 	
 	_declspec(dllexport) void ICP(vP3D originPoints,vP3D targetPoints,cv::Mat& R,cv::Mat& T);
+
+
+	_declspec(dllexport) void hand2eyeCalibration(std::string img_path_file_name, std::string robot_pos_file_name,
+		cv::Mat& H_cam2base, const cv::Mat cameraMatrix, const cv::Mat distCoeffs);
+
+	_declspec(dllexport) cv::Mat_<double> analyzePose(char* bufRecv, int size, cv::Mat_<double> ToolPose);
+	
+	_declspec(dllexport) void writeRobotPos(cv::Mat_<double> pos,std::string robot_pos_name);
+
+	_declspec(dllexport) cv::Mat_<double> readRobotPos(std::string robot_pos_name, int size);
+
 
 
 }

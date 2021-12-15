@@ -68,5 +68,17 @@
     <ClCompile Include="ICP.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="align.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hand2eyeCalibration.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="robotPosIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -12,7 +12,7 @@ void bl::ICP(vP3D originPoints, vP3D targetPoints, cv::Mat& R, cv::Mat& T)
 	// 错误率
 	double err = 100.0;
 	// 最高错误率
-	double maxErr = 1.0;
+	double maxErr = 0.5;
 	// 迭代次数 
 	int maxIter = 100;
 	// 设定初始R、T、h
@@ -23,8 +23,6 @@ void bl::ICP(vP3D originPoints, vP3D targetPoints, cv::Mat& R, cv::Mat& T)
 	cv::Mat H_final = h_o2t.clone();
 
 	size_t pointSize = originPoints.size();
-
-
 	int iters = 0;
 	while (err > maxErr && iters < maxIter)
 	{
@@ -35,7 +33,7 @@ void bl::ICP(vP3D originPoints, vP3D targetPoints, cv::Mat& R, cv::Mat& T)
 		// 计算误差
 		calErr(h_o2t, originPoints, targetPoints, err);
 
-		if (abs(err - lastErr) < 0.1 )
+		if (abs(err - lastErr) < 0.001 )
 			break;
 
 		// 质心
@@ -87,6 +85,8 @@ void bl::ICP(vP3D originPoints, vP3D targetPoints, cv::Mat& R, cv::Mat& T)
 
 		cv::Mat matTemp = matU * matV;
 		double det = cv::determinant(matTemp);
+		if (det < 0.0)
+			det = -1;
 
 		double datM[] = { 1, 0, 0, 0, 1, 0, 0, 0, det };
 		cv::Mat matS(3, 3, CV_64FC1, datM);
@@ -115,7 +115,7 @@ void bl::ICP(vP3D originPoints, vP3D targetPoints, cv::Mat& R, cv::Mat& T)
 
 		H_final = htemp.clone();
 
-	//	std::cout << " count: " << iters << " err: " << err<<std::endl;
+		std::cout << " count: " << iters << " err: " << err<<std::endl<<std::endl;
 
 
 	}
@@ -133,15 +133,15 @@ void calErr(cv::Mat h, bl::vP3D& ori, bl::vP3D tar, double& err)
 	double lengs = 0.0f;
 	for (int i = 0; i < pSize; i++)
 	{
-//		std::cout <<"ori p b:" << ori[i] << std::endl;
-//		std::cout <<"tar " << tar[i] << std::endl;
+		std::cout <<"ori p b:" << ori[i] << std::endl;
+		std::cout <<"tar " << tar[i] << std::endl;
 		cv::Mat tmp = (cv::Mat_<double>(4, 1) << ori[i].x, ori[i].y, ori[i].z, 1.0);
 		cv::Mat tmp2 = h * tmp;
 		ori[i].x = tmp2.at<double>(0, 0);
 		ori[i].y = tmp2.at<double>(1, 0);
 		ori[i].z = tmp2.at<double>(2, 0);
 		
-//		std::cout <<"ori p a:" << ori[i] << std::endl;
+		std::cout <<"ori p a:" << ori[i] << std::endl;
 
 		lengs += bl::get2PointD(ori[i], tar[i]);
 	}

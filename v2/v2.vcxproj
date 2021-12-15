@@ -160,6 +160,7 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="align.cpp" />
     <ClCompile Include="blP3P.cpp" />
     <ClCompile Include="cameraCalibration.cpp" />
     <ClCompile Include="dealP3P.cpp" />
@@ -168,6 +169,7 @@
     <ClCompile Include="getCosines.cpp" />
     <ClCompile Include="getImgRT.cpp" />
     <ClCompile Include="H2R_T.cpp" />
+    <ClCompile Include="hand2eyeCalibration.cpp" />
     <ClCompile Include="ICP.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -178,6 +180,8 @@
     <ClCompile Include="piexl2cam.cpp" />
     <ClCompile Include="R_T2H.cpp" />
     <ClCompile Include="solveForLengths.cpp" />
+    <ClCompile Include="robotPosIO.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
