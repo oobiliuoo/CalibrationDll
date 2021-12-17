@@ -107,20 +107,65 @@ namespace bl
 	*/
 	_declspec(dllexport) double getCosines(double a, double b, double c);
 
-	
+
+	/*
+		ICP，求两个点云之间的R，T
+		输入：
+			originPoints:源点云
+			targetPoints:目标云
+		输出：
+			R：origin到target的旋转矩阵
+			T：origin到target的平移向量
+	*/
 	_declspec(dllexport) void ICP(vP3D originPoints,vP3D targetPoints,cv::Mat& R,cv::Mat& T);
 
 
+	/*
+		手眼标定（眼在手外）
+		输入：
+			img_path_file_name: 标定板照片路径文件名
+			robot_pos_file_name: 机器位姿文件 格式：（x y z w v u）
+			cameraMatrix:		相机内参
+			distCoeffs：			畸变系数
+		输出：
+			H_cam2base:			手眼矩阵
+	*/
 	_declspec(dllexport) void hand2eyeCalibration(std::string img_path_file_name, std::string robot_pos_file_name,
 		cv::Mat& H_cam2base, const cv::Mat cameraMatrix, const cv::Mat distCoeffs);
 
+	/*
+		解析机器位姿,并拼接
+		输入：
+			bufRecv:   收到的机器位姿
+			size:	   bufRecv长度
+			ToolPose： 机器人位姿
+		return:
+			位姿数组
+	*/
 	_declspec(dllexport) cv::Mat_<double> analyzePose(char* bufRecv, int size, cv::Mat_<double> ToolPose);
 	
+	/*
+		写入机器人位姿
+		输入：
+			pos:			机器人位姿数组
+			robot_pos_name:	保存机器人位姿的文件
+	*/
 	_declspec(dllexport) void writeRobotPos(cv::Mat_<double> pos,std::string robot_pos_name);
 
+
+	/*
+		读取机器人位姿
+		输入：
+			robot_pos_name:	保存机器人位姿的文件
+			size:			位姿的个数
+		return:
+			机器人位姿数组
+	*/
 	_declspec(dllexport) cv::Mat_<double> readRobotPos(std::string robot_pos_name, int size);
 
 
+
+	_declspec(dllexport) bool checkImg(cv::Mat img, cv::Size boardSize);
 
 }
 

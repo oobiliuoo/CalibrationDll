@@ -163,6 +163,7 @@
     <ClCompile Include="align.cpp" />
     <ClCompile Include="blP3P.cpp" />
     <ClCompile Include="cameraCalibration.cpp" />
+    <ClCompile Include="checkImg.cpp" />
     <ClCompile Include="dealP3P.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="get2PointD.cpp" />

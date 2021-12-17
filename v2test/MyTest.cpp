@@ -166,6 +166,11 @@ void MyTest::test3()
 	cv::Mat c = cv::Mat(3, 3, CV_32FC1, cv::Scalar::all(0)); /* 摄像机内参数矩阵 */
 	cv::Mat k = cv::Mat(1, 5, CV_32FC1, cv::Scalar::all(0)); /* 摄像机的5个畸变系数：k1,k2,p1,p2,k3 */
 	std::string file = "eye2HandCalImageName.txt";
+
 	bl::cameraCalibration(file,c,k);
+
+	cv::Mat img = cv::imread("E:/biliu/workspace/Git/Eye2Hand/img/eyeHandCal/0.PNG");
+	cv::Size board_size = cv::Size(11, 8);    /* 标定板上每行、列的角点数 */
+	std::cout << "check:" << bl::checkImg(img, board_size);
 
 }
