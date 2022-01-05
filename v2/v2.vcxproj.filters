@@ -83,5 +83,8 @@
     <ClCompile Include="checkImg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Tool2J6.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -167,5 +167,8 @@ namespace bl
 
 	_declspec(dllexport) bool checkImg(cv::Mat img, cv::Size boardSize);
 
+
+	_declspec(dllexport) void Tool2J6(cv::Mat  j6Pos, cv::Point3d toolPoint, cv::Mat& T);
+
 }
 

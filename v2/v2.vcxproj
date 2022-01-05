@@ -182,6 +182,7 @@
     <ClCompile Include="R_T2H.cpp" />
     <ClCompile Include="solveForLengths.cpp" />
     <ClCompile Include="robotPosIO.cpp" />
+    <ClCompile Include="Tool2J6.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

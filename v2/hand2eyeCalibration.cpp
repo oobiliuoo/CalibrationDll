@@ -70,12 +70,64 @@ void bl::hand2eyeCalibration(std::string img_path_file_name, std::string robot_p
 	R_T2H(R_cam2base, T_cam2base,H_cam2base);
 
 	cv::Mat H_came2baseTemp = H_cam2base.clone();
-	// —È÷§
-	//for (int i = 0; i < size; i++)
-	//{
-	//	std::cout << " " << i << ": " << H_obj2cam[i] * H_came2baseTemp * H_base2end[i]<<std::endl;
 
-	//}
+	std::cout << "H_cam2base£∫\n" << H_cam2base << std::endl;
+
+	std::cout << "======================Check==============================\n";
+
+	double x_avg = 0, y_avg = 0, z_avg = 0;
+	for (int i = 0; i < H_obj2cam.size(); i++)
+	{
+		H_base2end[i].convertTo(H_base2end[i], CV_64F);
+		cv::Mat pt = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
+		std::cout << i << ":\t";
+		cv::Mat wuliao = H_base2end[i] * H_came2baseTemp * H_obj2cam[i] * pt;
+		cv::Vec3d hwl(wuliao.at<double>(0, 0), wuliao.at<double>(1, 0), wuliao.at<double>(2, 0));
+		std::cout << hwl << std::endl;
+		x_avg += hwl(0);
+		y_avg += hwl(1);
+		z_avg += hwl(2);
+	}
+	x_avg /= H_obj2cam.size();
+	y_avg /= H_obj2cam.size();
+	z_avg /= H_obj2cam.size();
+	std::cout << "x avg:" << x_avg << std::endl;
+	std::cout << "y avg:" << y_avg << std::endl;
+	std::cout << "z avg:" << z_avg << std::endl;
+	double x_max_err = -DBL_MAX, y_max_err = -DBL_MAX, z_max_err = -DBL_MAX;
+	double x_avg_err = 0, y_avg_err = 0, z_avg_err = 0;
+	for (int i = 0; i < H_obj2cam.size(); i++)
+	{
+		H_base2end[i].convertTo(H_base2end[i], CV_64F);
+		cv::Mat pt = (cv::Mat_<double>(4, 1) << 0, 0, 0, 1);
+		cv::Mat wuliao = H_base2end[i] * H_came2baseTemp * H_obj2cam[i] * pt;
+		cv::Vec3d hwl(wuliao.at<double>(0, 0), wuliao.at<double>(1, 0), wuliao.at<double>(2, 0));
+		double a1 = abs(hwl(0) - x_avg);
+		double a2 = abs(hwl(1) - y_avg);
+		double a3 = abs(hwl(2) - z_avg);
+		if (a1 > x_max_err)
+		{
+			x_max_err = a1;
+		}
+		if (a2 > y_max_err)
+		{
+			y_max_err = a2;
+		}
+		if (a3 > z_max_err)
+		{
+			z_max_err = a3;
+		}
+		x_avg_err += a1;
+		y_avg_err += a2;
+		z_avg_err += a3;
+	}
+	x_avg_err /= H_obj2cam.size();
+	y_avg_err /= H_obj2cam.size();
+	z_avg_err /= H_obj2cam.size();
+
+	std::cout << "x ave err£∫  " << x_avg_err << "mm" << "               " << "max err:    " << x_max_err << "mm" << std::endl;
+	std::cout << "y avg err£∫  " << y_avg_err << "mm" << "               " << "max err:    " << y_max_err << "mm" << std::endl;
+	std::cout << "z avg err£∫  " << z_avg_err << "mm" << "               " << "max err:    " << z_max_err << "mm" << std::endl;
 
 
 

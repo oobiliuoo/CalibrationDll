@@ -5,7 +5,7 @@
 void MyTest::test1()
 {
 
-	cv::Mat color = cv::imread("E:\\biliu\\workspace\\CppCode\\test\\AstraTest\\AstraCamera\\img\\image_12.jpg");
+	cv::Mat color = cv::imread("E:\\biliu\\workspace\\Git\\CalibrationDll\\img\\0.PNG");
 
 
 
@@ -48,7 +48,7 @@ void MyTest::test1()
 	std::vector<cv::Point2f> p2d;
 
 
-	int index[4] = { 0,6,40,56 };
+	int index[4] = { 56,6,40,0 };
 
 	//	object_points[index[0]].z = 5;
 	//	object_points[index[1]].z = 15;
@@ -80,21 +80,16 @@ void MyTest::test1()
 	h1 = h1.clone();
 	//	std::cout << "r1\n" << r1 << std::endl;
 	//	std::cout << "t1\n" << t1 << std::endl;
-	std::cout << "h\n" << h1 << std::endl;
+	std::cout << "取所有点进行求解：\n" << h1 << std::endl;
 
 	cv::Mat tmp = (cv::Mat_<double>(4, 1) << object_points[index[3]].x, object_points[index[3]].y, object_points[index[3]].z, 1.0);
 	cv::Mat tmp2 = h1 * tmp;
 	cv::Point3d p3(tmp2.at<double>(0, 0), tmp2.at<double>(1, 0), tmp2.at<double>(2, 0));
-	std::cout << "p3:" << p3 << std::endl;
+	std::cout << "反求的第四点:" << p3 << std::endl;
 	cv::Point3d camp;
 	bl::piexl2Cam(image_points_buf[index[3]], camp, 185.345, c);
-	std::cout << "camp:" << camp<<std::endl;
+//	std::cout << "camp:" << camp<<std::endl;
 
-
-
-
-	
-	
 
 
 	cv::Mat R, T, H;
@@ -104,7 +99,7 @@ void MyTest::test1()
 //	std::cout << "t:\n" << T << std::endl;
 	cv::Mat h2;
 	bl::R_T2H(R, T, h2);
-	std::cout << "h2:" << h2;
+	std::cout << "取三点进行求解:\n" << h2;
 
 
 
@@ -172,5 +167,17 @@ void MyTest::test3()
 	cv::Mat img = cv::imread("E:/biliu/workspace/Git/Eye2Hand/img/eyeHandCal/0.PNG");
 	cv::Size board_size = cv::Size(11, 8);    /* 标定板上每行、列的角点数 */
 	std::cout << "check:" << bl::checkImg(img, board_size);
+
+}
+
+void MyTest::test4()
+{
+
+	double a[9] = {-32,730,517,-174.984,-5.217,86,540};
+	cv::Mat j6pos = cv::Mat(1, 6, CV_64F, a);
+
+	cv::Point3d p(-5.367, 781.840, 241.916);
+	cv::Mat t;
+	bl::Tool2J6(j6pos,p,t);
 
 }

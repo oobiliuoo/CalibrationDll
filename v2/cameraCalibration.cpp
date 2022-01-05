@@ -26,21 +26,21 @@ void bl::cameraCalibration(std::string img_path_file_name, cv::Mat& cameraMatrix
 		}
 
 		/* 提取角点 */
-		if (0 == cv::findChessboardCorners(imageInput, board_size, image_points_buf))
+		if (0 == cv::findChessboardCornersSB(imageInput, board_size, image_points_buf, cv::CALIB_CB_EXHAUSTIVE))
 		{
 			std::cout << "(nfc:"<<image_count<<") "; //找不到角点
 			goto loop;
 		}
-		else
-		{
-			cv::Mat view_gray;
-			cvtColor(imageInput, view_gray, CV_RGB2GRAY);
-			/* 亚像素精确化 */
-			cv::find4QuadCornerSubpix(view_gray, image_points_buf, cv::Size(11, 11)); //对粗提取的角点进行精确化
-			image_points_seq.push_back(image_points_buf);  //保存亚像素角点
+		//else
+		//{
+		//	cv::Mat view_gray;
+		//	cvtColor(imageInput, view_gray, CV_RGB2GRAY);
+		//	/* 亚像素精确化 */
+		//	cv::find4QuadCornerSubpix(view_gray, image_points_buf, cv::Size(11, 11)); //对粗提取的角点进行精确化
+		//	image_points_seq.push_back(image_points_buf);  //保存亚像素角点
 
-		}
-
+		//}
+		image_points_seq.push_back(image_points_buf);  //保存亚像素角点
 		std::cout << image_count << "  ";
 		image_count++;
 	loop:
