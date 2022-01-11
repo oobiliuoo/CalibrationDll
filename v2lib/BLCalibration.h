@@ -16,6 +16,29 @@ namespace bl
 		 SOLVEPNP_BL		  = 100
 	};
 
+	struct BinocularStereoCamera
+	{
+		cv::Mat _left_cameraMatrix;
+		cv::Mat _left_distCoeffs;
+
+		cv::Mat _right_cameraMatrix;
+		cv::Mat _right_distCoeffs;
+
+		cv::Mat _H_l2r;
+
+		cv::Mat _E;
+		cv::Mat _F;
+
+		cv::Mat _R1;
+		cv::Mat _R2;
+		cv::Mat _P1;
+		cv::Mat _P2;
+		cv::Mat _Q;
+
+	};
+
+	using BSC = BinocularStereoCamera;
+
 
 
 	/*
@@ -100,7 +123,6 @@ namespace bl
 	*/
 	_declspec(dllexport) double get2PointD(cv::Point3f o, cv::Point3f p);
 
-
 	/*
 		求解余弦值
 		cos<a,b> = (a*a+b*b-c*c)/(2ab)
@@ -124,7 +146,7 @@ namespace bl
 		手眼标定（眼在手外）
 		输入：
 			img_path_file_name: 标定板照片路径文件名
-			robot_pos_file_name: 机器位姿文件 格式：（x y z w v u）
+			robot_pos_file_name: 机器位姿文件 格式：（x y z rx ry rz）
 			cameraMatrix:		相机内参
 			distCoeffs：			畸变系数
 		输出：
@@ -164,11 +186,48 @@ namespace bl
 	_declspec(dllexport) cv::Mat_<double> readRobotPos(std::string robot_pos_name, int size);
 
 
-
+	/*
+		判断图片是否能检测到角点
+		输入：
+			img: 图片
+			boardSize: 标定板大小
+		return:
+			
+			
+	*/
 	_declspec(dllexport) bool checkImg(cv::Mat img, cv::Size boardSize);
 
-
+	/*
+		工具端修正
+		输入：
+			j6Pos: 机器人T0位姿
+			toolPoint: 尖端机底坐标
+		输出：
+			T：工具端平移向量
+	*/
 	_declspec(dllexport) void Tool2J6(cv::Mat  j6Pos, cv::Point3d toolPoint, cv::Mat& T);
+
+
+	/*
+		双目标定
+	*/
+	_declspec(dllexport) void stereoCalibrate(std::string img_1_path_file_name,std::string img_2_path_file_name,
+	const cv::Size& board_size, const cv::Size& square_size,
+		bl::BSC& bsc);
+
+	//_declspec(dllexport) void stereoCalibrate(cv::Mat ,cv::Mat,)
+
+	/*
+		双目矫正
+	*/
+	_declspec(dllexport) void stereoCorrect(BSC& bsc,cv::Mat& imgl,cv::Mat& imgr,cv::Rect* validRoi);
+
+	_declspec(dllexport) cv::Point3f stereoPiexl2Cam(cv::Point2f& piexl_l, cv::Point2f& piexl_r,
+		cv::Mat intrinsic_l,cv::Mat Intrinsic_r,cv::Mat h_obj2cam_l,cv::Mat h_obj2cam_r);
+
+	_declspec(dllexport) cv::Point3f stereoPiexl2Cam2(cv::Point2f piexl_l, cv::Point2f piexl_r,
+		cv::Mat intrinsic_l, cv::Mat Intrinsic_r, cv::Mat h_obj2cam_l, cv::Mat h_obj2cam_r);
+
 
 }
 

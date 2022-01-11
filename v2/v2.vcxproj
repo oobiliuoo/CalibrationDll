@@ -172,6 +172,7 @@
     <ClCompile Include="H2R_T.cpp" />
     <ClCompile Include="hand2eyeCalibration.cpp" />
     <ClCompile Include="ICP.cpp" />
+    <ClCompile Include="matIO.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -182,6 +183,9 @@
     <ClCompile Include="R_T2H.cpp" />
     <ClCompile Include="solveForLengths.cpp" />
     <ClCompile Include="robotPosIO.cpp" />
+    <ClCompile Include="stereoCalibrate.cpp" />
+    <ClCompile Include="stereoCorrect.cpp" />
+    <ClCompile Include="stereoPiexl2Cam.cpp" />
     <ClCompile Include="Tool2J6.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>

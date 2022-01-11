@@ -91,7 +91,7 @@ void MyTest::test1()
 //	std::cout << "camp:" << camp<<std::endl;
 
 
-
+	std::cout << "============================\n";
 	cv::Mat R, T, H;
 
 	bl::dealP3P(p3d, p2d, c,k, R, T, bl::SOLVEPNP_P3P);
@@ -100,6 +100,11 @@ void MyTest::test1()
 	cv::Mat h2;
 	bl::R_T2H(R, T, h2);
 	std::cout << "取三点进行求解:\n" << h2;
+	cv::Mat tmp22 = h2 * tmp;
+	cv::Point3d p32(tmp22.at<double>(0, 0), tmp22.at<double>(1, 0), tmp22.at<double>(2, 0));
+	std::cout << "\n反求的第四点:" << p32 << std::endl;
+
+
 
 
 

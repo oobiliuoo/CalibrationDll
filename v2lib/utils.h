@@ -31,3 +31,23 @@ _declspec(dllexport)  cv::Mat eulerAngleToRotateMatrix(const cv::Mat& eulerAngle
 * @return	  返回转换完的齐次矩阵
 **************************************************/
 _declspec(dllexport) cv::Mat attitudeVectorToMatrix(const cv::Mat& m, bool useQuaternion, const std::string& seq);
+
+
+/*
+    保存矩阵
+    输入:
+        file:文件名
+        src:目标矩阵
+        name:索引名
+*/
+_declspec(dllexport) void writeMat(std::string file, cv::Mat src, std::string name);
+
+/*
+    保存矩阵
+    输入:
+        file:文件名
+        name:索引名
+    输出：
+        dst: 目标矩阵
+*/
+_declspec(dllexport) void readMat(std::string file, cv::Mat& dst, std::string name);

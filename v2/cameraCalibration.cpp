@@ -26,7 +26,7 @@ void bl::cameraCalibration(std::string img_path_file_name, cv::Mat& cameraMatrix
 		}
 
 		/* 提取角点 */
-		if (0 == cv::findChessboardCornersSB(imageInput, board_size, image_points_buf, cv::CALIB_CB_EXHAUSTIVE))
+		if (0 == cv::findChessboardCornersSB(imageInput, board_size, image_points_buf, cv::CALIB_CB_EXHAUSTIVE|cv::CALIB_CB_ACCURACY))
 		{
 			std::cout << "(nfc:"<<image_count<<") "; //找不到角点
 			goto loop;

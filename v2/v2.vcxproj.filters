@@ -86,5 +86,17 @@
     <ClCompile Include="Tool2J6.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="stereoCalibrate.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stereoCorrect.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="matIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stereoPiexl2Cam.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

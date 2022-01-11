@@ -8,19 +8,19 @@ void bl::getImgRT(const cv::Mat srcImg, cv::Mat& R, cv::Mat& T, const cv::Mat ca
 	/*棋盘三维信息*/
 	cv::Size square_size = cv::Size(5, 5);  /* 实际测量得到的标定板上每个棋盘格的大小 */
 		/* 提取角点 */
-	if (0 == findChessboardCorners(srcImg, board_size, image_points_buf))
+	if (0 == findChessboardCornersSB(srcImg, board_size, image_points_buf,  cv::CALIB_CB_EXHAUSTIVE | cv::CALIB_CB_ACCURACY))
 	{
 		std::cout << "can not find chessboard corners!\n"; //找不到角点
 		return ;
 	}
-	else
-	{
-		cv::Mat view_gray;
-		cvtColor(srcImg, view_gray, CV_RGB2GRAY);
-		/* 亚像素精确化 */
-		find4QuadCornerSubpix(view_gray, image_points_buf, cv::Size(11, 11)); //对粗提取的角点进行精确化
-	
-	}
+	//else
+	//{
+	//	cv::Mat view_gray;
+	//	cvtColor(srcImg, view_gray, CV_RGB2GRAY);
+	//	/* 亚像素精确化 */
+	//	find4QuadCornerSubpix(view_gray, image_points_buf, cv::Size(11, 11)); //对粗提取的角点进行精确化
+	//
+	//}
 	/* 初始化标定板上角点的三维坐标 */
 	int i, j, t;
 	std::vector<cv::Point3f> object_points;
