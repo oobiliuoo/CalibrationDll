@@ -29,7 +29,7 @@ cv::Point3f bl::stereoPiexl2Cam(cv::Point2f& piexl_l, cv::Point2f& piexl_r,
 	//intrinsic_r.convertTo(intrinsic_r, CV_32F);
 	
 
-	//std::cout << "rt_1\n" << rt_l << std::endl;
+//	std::cout << "rt_1\n" << rt_l << std::endl;
 //	std::cout << "rt_r\n" << rt_r << std::endl;
 //	std::cout << "intrinsic_l\n" << intrinsic_l << std::endl;
 //	std::cout << "intrinsic_r\n" << intrinsic_r << std::endl;

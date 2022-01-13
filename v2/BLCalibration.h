@@ -235,12 +235,13 @@ namespace bl
 		输入：
 		imgL:左图
 		imgR:右图
-		endPos: 末端位姿 （2*3）<<x,y,z;
-								rx,ry,rz;
+		endPos: 末端位姿 （2*3）<<x,y,z,rx,ry,rz;
 		H_cam2base_L: 左相机的手眼矩阵
 		intrinsic_L: 左相机内参
 		intrinsic_R: 右相机内参
 		H_left2right: 左相机到右相机的转换矩阵
+		cout_flog: 内部输出 默认关闭 10086 显示找点图 
+		rect: 精准范围
 
 		输出：
 		T_tool2end: 工具端到末端的平移向量 （1*3）<<x,y,z
@@ -250,7 +251,7 @@ namespace bl
 	*/
 	_declspec(dllexport) int stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_cam2base_L,
 		cv::Mat intrinsic_L, cv::Mat intrinsic_R, cv::Mat H_left2right,
-		cv::Mat T_tool2end, int cout_flog);
+		cv::Mat& T_tool2end, int cout_flog = 0, cv::Rect rect = cv::Rect(0, 0, 0, 0));
 
 }
 

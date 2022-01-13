@@ -4,7 +4,7 @@ cv::Point2d Cusp(cv::Mat src, int srcshow);
 
 int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_cam2base_L,
 	cv::Mat intrinsic_L, cv::Mat intrinsic_R, cv::Mat H_left2right,
-	cv::Mat T_tool2end,int cout_flog=0)
+	cv::Mat& T_tool2end,int cout_flog,cv::Rect rect)
 {
 
 	// 验证数据
@@ -33,17 +33,22 @@ int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_c
 
 
 	// 提取像素点
-		// 图像处理
+	// 图像处理
+	if (rect.area() != 0)
+	{
+		imgL = imgL(rect);
+		imgR = imgR(rect);
+	}
 
 	// 提取像素点
 	cv::Point2d tempP;
 	cv::Point2f p1, p2;
 
-	tempP = Cusp(imgL, 10085);
+	tempP = Cusp(imgL, cout_flog);
 	p1.x = (float)tempP.x;
 	p1.y = (float)tempP.y;
 
-	tempP = Cusp(imgR, 10085);
+	tempP = Cusp(imgR, cout_flog);
 	p2.x = (float)tempP.x;
 	p2.y = (float)tempP.y;
 
@@ -54,6 +59,15 @@ int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_c
 		return 3;
 	}
 
+	if (rect.area() != 0)
+	{
+		p1.x += rect.x;
+		p1.y += rect.y;
+		p2.x += rect.x;
+		p2.y += rect.y;
+	}
+
+
 	if(cout_flog)
 	{
 		std::cout << "p1" << p1 << std::endl;
@@ -62,15 +76,19 @@ int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_c
 
 	// 像素点转相机点
 	cv::Point3f toolPoint;
-	cv::Mat H_cam2base_R = H_left2right * H_cam2base_L;
+
+	cv::Mat H_base2cam_L = H_cam2base_L.inv();
+	cv::Mat H_base2cam_R = H_left2right * H_base2cam_L;
 	// std::cout << "H2 2 " << H_cam2base_R << std::endl;
-	toolPoint = bl::stereoPiexl2Cam(p1, p2, intrinsic_L, intrinsic_R, H_cam2base_L, H_cam2base_R);
+
+	toolPoint = bl::stereoPiexl2Cam(p1, p2, intrinsic_L, intrinsic_R, H_base2cam_L, H_base2cam_R);
 	if(cout_flog)
 		std::cout << "toolPoint" << toolPoint << std::endl;
 
 	// 解析位姿
-	cv::Mat  mEndPos(1, 6, CV_64F);
-	cv::hconcat(endPos.rowRange(0, 1), endPos.rowRange(1, 2),mEndPos);
+	cv::Mat mEndPos(1, 6, CV_64F);
+	cv::hconcat(endPos.rowRange(0, 1), endPos.rowRange(1, 2), mEndPos);
+
 
 	cv::Point3d baseTool;
 	baseTool.x = toolPoint.x;
@@ -81,7 +99,11 @@ int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_c
 	// 求工具端
 	bl::Tool2J6(mEndPos,baseTool,H_tool2end);
 
-	bl::H2R_T(H_tool2end, R, T_tool2end);
+//	std::cout << "dll: H_tool2endL\n" << H_tool2end << std::endl;
+	cv::Mat t;
+	bl::H2R_T(H_tool2end, R, t);
+	T_tool2end = t.clone();
+
 
 	return 0;
 
