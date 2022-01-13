@@ -8,6 +8,7 @@ void getImgsPoints(bl::vMat imgs, std::vector<std::vector<cv::Point2f>>& Points,
 	{
 		cv::Mat img1 = imgs[i];
 		cv::Mat gray1;
+	//	gray1 = img1.clone();
 		cv::cvtColor(img1, gray1, CV_BGR2GRAY);
 		std::vector<cv::Point2f> img1_points;
 		cv::findChessboardCornersSB(gray1,boardSize,img1_points, cv::CALIB_CB_EXHAUSTIVE | cv::CALIB_CB_ACCURACY);

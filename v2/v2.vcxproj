@@ -186,6 +186,7 @@
     <ClCompile Include="stereoCalibrate.cpp" />
     <ClCompile Include="stereoCorrect.cpp" />
     <ClCompile Include="stereoPiexl2Cam.cpp" />
+    <ClCompile Include="stereoToolRepair.cpp" />
     <ClCompile Include="Tool2J6.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>

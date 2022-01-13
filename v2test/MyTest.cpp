@@ -184,5 +184,45 @@ void MyTest::test4()
 	cv::Point3d p(-5.367, 781.840, 241.916);
 	cv::Mat t;
 	bl::Tool2J6(j6pos,p,t);
+	std::cout << "t: " << t;
+
+}
+
+void MyTest::test5()
+{
+	std::string img_l_path = "./img1cal.txt";
+	std::string img_r_path = "./img2cal.txt";
+
+	cv::Size square_size = cv::Size(5, 5);  /* 实际测量得到的标定板上每个棋盘格的大小 */
+	cv::Size board_size = cv::Size(11, 8);    /* 标定板上每行、列的角点数 */
+
+	bl::BSC bsc;
+
+	bl::stereoCalibrate(img_l_path, img_r_path, board_size, square_size, bsc);
+
+
+	bsc._left_cameraMatrix.convertTo(bsc._left_cameraMatrix, CV_32F);
+	bsc._left_distCoeffs.convertTo(bsc._left_distCoeffs, CV_32F);
+	bsc._right_cameraMatrix.convertTo(bsc._right_cameraMatrix, CV_32F);
+	bsc._right_distCoeffs.convertTo(bsc._right_distCoeffs, CV_32F);
+	bsc._H_l2r.convertTo(bsc._H_l2r, CV_32F);
+
+	std::cout << " " << bsc._left_cameraMatrix << std::endl;
+	std::cout << " " << bsc._left_distCoeffs << std::endl;
+	std::cout << " " << bsc._right_cameraMatrix << std::endl;
+	std::cout << " " << bsc._right_distCoeffs << std::endl;
+	std::cout << " " << bsc._H_l2r << std::endl;
+
+	cv::FileStorage fs("./config.xml", cv::FileStorage::WRITE);
+	fs.release();
+
+	writeMat("./config.xml", bsc._left_cameraMatrix, "left_cameraMatrix");
+	writeMat("./config.xml", bsc._left_distCoeffs, "_left_distCoeffs");
+	writeMat("./config.xml", bsc._right_cameraMatrix, "right_cameraMatrix");
+	writeMat("./config.xml", bsc._right_distCoeffs, "right_distCoeffs");
+	writeMat("./config.xml", bsc._H_l2r, "H_l2r");
+	writeMat("./config.xml", bsc._E, "E");
+	writeMat("./config.xml", bsc._F, "F");
+
 
 }
