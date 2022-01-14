@@ -5,10 +5,10 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>E:\ChaoZhun_Biliu\workspace\GitStorage\CalibrationDll\dependence\opencv\include\opencv2;E:\ChaoZhun_Biliu\workspace\GitStorage\CalibrationDll\dependence\opencv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\biliu\workspace\Git\CalibrationDll\dependence\opencv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>E:\ChaoZhun_Biliu\workspace\GitStorage\CalibrationDll\dependence\opencv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>E:\biliu\workspace\Git\CalibrationDll\dependence\opencv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opencv_world454.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

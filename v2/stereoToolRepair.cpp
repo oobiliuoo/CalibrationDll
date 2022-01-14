@@ -48,6 +48,8 @@ int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_c
 	p1.x = (float)tempP.x;
 	p1.y = (float)tempP.y;
 
+	if (cout_flog == 3)
+		cv::waitKey(0);
 	tempP = Cusp(imgR, cout_flog);
 	p2.x = (float)tempP.x;
 	p2.y = (float)tempP.y;
@@ -57,6 +59,15 @@ int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_c
 		if (cout_flog)
 			std::cout << "can not find the tool" << std::endl;
 		return 3;
+	}
+
+	if (cout_flog == 2)
+	{
+		circle(imgL, p1, 1, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
+		circle(imgR, p2, 1, cv::Scalar(0, 0, 255), 1, cv::LINE_AA);
+
+		cv::imshow("left", imgL);
+		cv::imshow("right", imgR);
 	}
 
 	if (rect.area() != 0)
@@ -73,6 +84,8 @@ int bl::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos, cv::Mat H_c
 		std::cout << "p1" << p1 << std::endl;
 		std::cout << "p2" << p2 << std::endl;
 	}
+
+
 
 	// 像素点转相机点
 	cv::Point3f toolPoint;
@@ -116,7 +129,7 @@ cv::Point2d Cusp(cv::Mat src, int srcshow) {
 	cvtColor(cuspsrc, cuspsrc1, cv::COLOR_BGR2GRAY);
 	threshold(cuspsrc1, cuspsrc2, 30, 255, cv::THRESH_OTSU);
 	threshold(cuspsrc2, cuspsrc2, 30, 255, cv::THRESH_BINARY_INV);
-	if (srcshow == 10086) {
+	if (srcshow == 3) {
 		imshow("阈值", cuspsrc2);
 	}
 
@@ -155,7 +168,7 @@ cv::Point2d Cusp(cv::Mat src, int srcshow) {
 			int label = labels.at<int>(x, y);//注意labels是int型，不是uchar.
 			src_color.at<uchar>(x, y) = color[label];
 		}
-	if (srcshow == 10086) {
+	if (srcshow == 3) {
 		imshow("labelMap", src_color);
 	}
 
@@ -164,7 +177,7 @@ cv::Point2d Cusp(cv::Mat src, int srcshow) {
 	//cvtColor(cuspsrc4, cuspsrc4, COLOR_BGR2GRAY);
 	threshold(cuspsrc4, cuspsrc4, 30, 255, cv::THRESH_OTSU);
 	//threshold(cuspsrc4, cuspsrc4, 30, 255, THRESH_BINARY);
-	if (srcshow == 10086) {
+	if (srcshow == 3) {
 		imshow("4444", cuspsrc4);
 	}
 	std::vector<cv::Point2d> cuspPv;
@@ -200,7 +213,7 @@ cv::Point2d Cusp(cv::Mat src, int srcshow) {
 		}
 	}
 	circle(cuspsrc, cuspP2, 1, cv::Scalar(0, 0, 255), 8, cv::LINE_AA);
-	if (srcshow == 10086) {
+	if (srcshow == 3) {
 		imshow("final", cuspsrc);
 	}
 	return cuspP;
