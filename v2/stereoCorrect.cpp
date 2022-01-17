@@ -4,13 +4,18 @@
 void bl::stereoCorrect(BSC& bsc, cv::Mat& imgl, cv::Mat& imgr, cv::Rect* validRoi)
 {
 
-
+	std::cout << "此版有bug，已结束使用\n";
+	/*
 	cv::Size imageSize;
 	imageSize.width = imgl.cols;
 	imageSize.height = imgl.rows;
 
 	cv::Mat R, T;
 	bl::H2R_T(bsc._H_l2r, R, T);
+	std::cout << "H;\n" << bsc._H_l2r << std::endl;
+
+	std::cout << "width: " << imageSize.width << std::endl;
+
 
 	stereoRectify(bsc._left_cameraMatrix, bsc._left_distCoeffs,
 		bsc._right_cameraMatrix, bsc._right_distCoeffs,
@@ -34,5 +39,5 @@ void bl::stereoCorrect(BSC& bsc, cv::Mat& imgl, cv::Mat& imgr, cv::Rect* validRo
 
 	imgl = imgl(cv::Rect(validRoi[0].x, validRoi[0].y, width, height));
 	imgr = imgr(cv::Rect(validRoi[1].x, validRoi[1].y, width, height));
-
+	*/
 }
