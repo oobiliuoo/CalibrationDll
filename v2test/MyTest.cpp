@@ -94,7 +94,7 @@ void MyTest::test1()
 	std::cout << "============================\n";
 	cv::Mat R, T, H;
 
-	bl::dealP3P(p3d, p2d, c,k, R, T, bl::SOLVEPNP_P3P);
+	bl::dealP3P(p3d, p2d, c,k, R, T, bl::SOLVEPNP_BL);
 //	std::cout << "r:\n" << R << std::endl;
 //	std::cout << "t:\n" << T << std::endl;
 	cv::Mat h2;

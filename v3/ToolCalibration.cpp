@@ -75,16 +75,27 @@ void ToolCalibration::setRect_L(cv::Rect rect)
 		std::cout << "rect_l is null\n";
 		return;
 	}
+	if (rect.x + rect.width > 1280 || rect.y + rect.height > 1024)
+	{
+		std::cout << "rect_l is invalue\n";
+		return;
+	}
 	this->rect_L = rect;
 }
 
-void ToolCalibration::setRect_R(cv::Rect rect)
+void ToolCalibration::setRect_R(cv::Rect rect)   
 {
 	if (rect.empty())
 	{
 		std::cout << "rect_r is null\n";
 		return;
 	}
+	if (rect.x + rect.width > 1280 || rect.y + rect.height > 1024)
+	{
+		std::cout << "rect_r is invalue\n";
+		return;
+	}
+
 	this->rect_R = rect;
 }
 
