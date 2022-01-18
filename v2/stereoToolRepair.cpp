@@ -127,7 +127,7 @@ cv::Point2d Cusp(cv::Mat src, int srcshow) {
 	cv::Mat cuspsrc, cuspsrc1, cuspsrc2, cuspsrc3, cuspsrc4;
 	medianBlur(src, cuspsrc, 5);
 	cvtColor(cuspsrc, cuspsrc1, cv::COLOR_BGR2GRAY);
-	threshold(cuspsrc1, cuspsrc2, 30, 255, cv::THRESH_OTSU);
+	threshold(cuspsrc1, cuspsrc2, 30, 255, cv::THRESH_OTSU); //cv::THRESH_BINARY
 	threshold(cuspsrc2, cuspsrc2, 30, 255, cv::THRESH_BINARY_INV);
 	if (srcshow == 3) {
 		imshow("ãÐÖµ", cuspsrc2);

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{9eae4d7c-c145-470d-815c-908832f18154}</ProjectGuid>
-    <RootNamespace>v2test</RootNamespace>
+    <ProjectGuid>{81c33435-08d0-4cb8-9cdb-c6d0945bbd7b}</ProjectGuid>
+    <RootNamespace>v3</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -67,7 +67,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\OpenCV454.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -82,7 +81,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>.\x64\Release</OutDir>
+    <OutDir>.\x64\v3lib</OutDir>
+    <TargetName>Calibration_v3.0</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -132,24 +132,35 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../v2lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>./v2lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Calibration_v2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="MyTest.cpp" />
+    <ClInclude Include="AbsCalibration.h" />
+    <ClInclude Include="AbsFactory.h" />
+    <ClInclude Include="AbsUtils.h" />
+    <ClInclude Include="BLdll.h" />
+    <ClInclude Include="CalibrationFactory.h" />
+    <ClInclude Include="CamCalibration.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="ToolCalibration.h" />
+    <ClInclude Include="TransitionUtil.h" />
+    <ClInclude Include="UtilsFactory.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MyTest.h" />
+    <ClCompile Include="AbsFactory.cpp" />
+    <ClCompile Include="AbsUtils.cpp" />
+    <ClCompile Include="CalibrationFactory.cpp" />
+    <ClCompile Include="CamCalibration.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="ToolCalibration.cpp" />
+    <ClCompile Include="TransitionUtil.cpp" />
+    <ClCompile Include="UtilsFactory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

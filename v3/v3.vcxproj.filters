@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\calbration">
+      <UniqueIdentifier>{58ef5a15-6066-42ee-b8b7-095de3ba1f0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\calbration">
+      <UniqueIdentifier>{fab51d0d-5eca-47fc-a4c7-82b12addb6e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\base">
+      <UniqueIdentifier>{51f963ba-7907-414b-bf31-de6616b82bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\factory">
+      <UniqueIdentifier>{82254406-4f20-4d69-8de9-ffff4abad8d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\factory">
+      <UniqueIdentifier>{9a68e9d0-8032-423c-ac1d-9d06598d6ae2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\utils">
+      <UniqueIdentifier>{8ba531b5-889d-4538-833e-554c1cdee2a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="资源文件\utils">
+      <UniqueIdentifier>{ba3fdfff-3421-4e9a-af3d-c10981ae57b4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h">
+      <Filter>头文件\base</Filter>
+    </ClInclude>
+    <ClInclude Include="CamCalibration.h">
+      <Filter>头文件\calbration</Filter>
+    </ClInclude>
+    <ClInclude Include="AbsFactory.h">
+      <Filter>头文件\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="CalibrationFactory.h">
+      <Filter>头文件\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="ToolCalibration.h">
+      <Filter>头文件\calbration</Filter>
+    </ClInclude>
+    <ClInclude Include="UtilsFactory.h">
+      <Filter>头文件\factory</Filter>
+    </ClInclude>
+    <ClInclude Include="AbsUtils.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="TransitionUtil.h">
+      <Filter>头文件\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="AbsCalibration.h">
+      <Filter>头文件\calbration</Filter>
+    </ClInclude>
+    <ClInclude Include="BLdll.h">
+      <Filter>头文件\base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CamCalibration.cpp">
+      <Filter>资源文件\calbration</Filter>
+    </ClCompile>
+    <ClCompile Include="AbsFactory.cpp">
+      <Filter>资源文件\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="CalibrationFactory.cpp">
+      <Filter>资源文件\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ToolCalibration.cpp">
+      <Filter>资源文件\calbration</Filter>
+    </ClCompile>
+    <ClCompile Include="UtilsFactory.cpp">
+      <Filter>资源文件\factory</Filter>
+    </ClCompile>
+    <ClCompile Include="AbsUtils.cpp">
+      <Filter>资源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TransitionUtil.cpp">
+      <Filter>资源文件\utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
