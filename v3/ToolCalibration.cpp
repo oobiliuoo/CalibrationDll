@@ -6,6 +6,8 @@ ToolCalibration::ToolCalibration()
 	fac = new UtilsFactory();
 	this->util = fac->getTransUtils();
 
+	this->H_tool2end = cv::Mat::zeros(4,4,CV_32F);
+
 	this->rect_L = cv::Rect(0, 0, 0, 0);
 	this->rect_R = cv::Rect(0, 0, 0, 0);
 
@@ -604,7 +606,7 @@ int ToolCalibration::stereoToolRepair(cv::Mat imgL, cv::Mat imgR, cv::Mat endPos
 	if (this->threshold_data[1] == 0)
 		tempP = Cusp(imgR, cout_f);
 	else
-		tempP = Cusp2(imgR, this->threshold_data[0]);
+		tempP = Cusp2(imgR, this->threshold_data[1]);
 
 	p2.x = (float)tempP.x;
 	p2.y = (float)tempP.y;

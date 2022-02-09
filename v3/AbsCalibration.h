@@ -215,4 +215,40 @@ namespace bl {
 
 	};
 
+
+	class CLASS_DECLSPEC AbsEyeHandCalibration : public AbsCalibration
+	{
+	protected:
+		using  vMat = std::vector<cv::Mat>;
+
+		/*相机内参*/
+		cv::Mat intrinsic;
+		
+		/*相机畸变*/
+		cv::Mat distCoeffs;
+
+		/*手眼矩阵*/
+		cv::Mat H_cam2base;
+
+		/*手眼图片路径文件*/
+		std::string img_path_file_name;
+
+		/*机器人位姿文件*/
+		std::string robot_pos_file_name;
+
+
+	public:
+
+		virtual void handEyeCalibration()=0;
+
+		virtual void handEyeCalibration(vMat imgs, vMat robot_poss,cv::Mat& H_cam2base,
+			const cv::Mat cameraMatrix, const cv::Mat distCoeffs) = 0;
+
+		virtual void handEyeCalibration(std::string img_path_file_name, std::string robot_pos_file_name,
+			cv::Mat& H_cam2base, const cv::Mat cameraMatrix, const cv::Mat distCoeffs)=0;
+
+
+
+	};
+
 }

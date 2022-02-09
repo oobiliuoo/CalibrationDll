@@ -66,6 +66,9 @@
     <ClInclude Include="BLdll.h">
       <Filter>头文件\base</Filter>
     </ClInclude>
+    <ClInclude Include="EyeHandCalibration.h">
+      <Filter>头文件\calbration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CamCalibration.cpp">
@@ -91,6 +94,9 @@
     </ClCompile>
     <ClCompile Include="TransitionUtil.cpp">
       <Filter>资源文件\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="EyeHandCalibration.cpp">
+      <Filter>资源文件\calbration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

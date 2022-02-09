@@ -46,7 +46,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -67,7 +67,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Import Project="..\OpenCV454.props" />
+    <Import Project="opencv454.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -147,6 +147,7 @@
     <ClInclude Include="BLdll.h" />
     <ClInclude Include="CalibrationFactory.h" />
     <ClInclude Include="CamCalibration.h" />
+    <ClInclude Include="EyeHandCalibration.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ToolCalibration.h" />
     <ClInclude Include="TransitionUtil.h" />
@@ -157,6 +158,7 @@
     <ClCompile Include="AbsUtils.cpp" />
     <ClCompile Include="CalibrationFactory.cpp" />
     <ClCompile Include="CamCalibration.cpp" />
+    <ClCompile Include="EyeHandCalibration.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ToolCalibration.cpp" />
     <ClCompile Include="TransitionUtil.cpp" />
